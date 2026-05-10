@@ -39,16 +39,16 @@ No environment variables or external services are required.
 ## Key technical decisions
 
 ### 1. Static JSON import over json-server
-The brief allowed either a static import or a mock API with json-server. I chose a direct import. There's no async complexity, no server to spin up, and no failure surface — which keeps the focus on the UI layer where this role lives.
+The brief allowed either a static import or a mock API with json-server. I chose a direct import. There's no async complexity, no server to spin up, and no failure surface, which keeps the focus on the UI layer where this role lives.
 
 ### 2. Recharts for charting
-Recharts is composable, has a clean declarative API that matches React's mental model, and produces accessible SVG output. It also supports the multi-series overlay (bonus requirement) without needing a separate data transformation layer — just adding extra `<Line>` components is enough.
+Recharts is composable, has a clean declarative API that matches React's mental model, and produces accessible SVG output. It also supports the multi-series overlay (bonus requirement) without needing a separate data transformation layer, just adding extra `<Line>` components is enough.
 
 ### 3. Inline styles over Tailwind
-The brief says Tailwind is "strongly preferred," and I'd use it in a production codebase. For this self-contained artifact submission, inline styles with a central design token object keep the component fully portable and avoid any build configuration. Every spacing, color, and typography decision is still deliberate and consistent — it's just enforced by convention rather than by a utility class list.
+The brief says Tailwind is "strongly preferred," and I'd use it in a production codebase. For this self-contained artifact submission, inline styles with a central design token object keep the component fully portable and avoid any build configuration. Every spacing, color, and typography decision is still deliberate and consistent, it's just enforced by convention rather than by a utility class list.
 
 ### 4. Sorting state lives in `PortfolioTable`
-Column sort state is local to the table component rather than hoisted. It resets on fund switch (desired UX — each fund's table starts with the default sort) and doesn't pollute the top-level dashboard state.
+Column sort state is local to the table component rather than hoisted. It resets on fund switch (desired UX, each fund's table starts with the default sort) and doesn't pollute the top-level dashboard state.
 
 ### 5. MOIC as a derived column
 MOIC (Multiple on Invested Capital = currentValue / investedCapital) is not in the dataset but is a standard PE metric that any fund manager would expect to see alongside current value. I computed it inline in the column renderer.
