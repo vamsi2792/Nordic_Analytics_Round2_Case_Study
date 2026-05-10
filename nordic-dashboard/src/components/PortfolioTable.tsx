@@ -110,94 +110,76 @@ export default function PortfolioTable({ companies }: PortfolioTableProps) {
     return [...companies].sort((a, b) => sortDir * (col.sort!(a) - col.sort!(b)));
   }, [companies, sortKey, sortDir]);
 
-  const hasNegativeEbitda = companies.some(c => c.ebitdaMargin < 0);
-
   const handleSort = (key: string) => {
     if (sortKey === key) setSortDir(d => (d === 1 ? -1 : 1));
     else { setSortKey(key); setSortDir(-1); }
   };
 
   return (
-    <div>
-      {/* Negative EBITDA alert banner */}
-      {hasNegativeEbitda && (
-        <div style={{
-          display: "flex", alignItems: "center", gap: 10, marginBottom: 14,
-          background: "rgba(239,83,80,0.1)", border: "1px solid rgba(239,83,80,0.25)",
-          borderRadius: 6, padding: "10px 14px",
-        }}>
-          <span style={{ color: "#EF5350", fontSize: 13 }}>⚠</span>
-          <span style={{ fontSize: 12, color: "#EF9F9E", fontFamily: "'DM Mono', monospace" }}>
-            One or more portfolio companies have a negative EBITDA margin
-          </span>
-        </div>
-      )}
-
-      <div style={{ overflowX: "auto" }}>
-        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
-          <thead>
-            <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
-              {COL_CONFIG.map(col => (
-                <th
-                  key={col.key}
-                  onClick={() => col.sort && handleSort(col.key)}
-                  style={{
-                    padding: "10px 14px", textAlign: col.align,
-                    fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase",
-                    color: sortKey === col.key ? "#6DB8E8" : "rgba(255,255,255,0.35)",
-                    fontFamily: "'DM Mono', monospace", fontWeight: 500,
-                    cursor: col.sort ? "pointer" : "default",
-                    userSelect: "none", whiteSpace: "nowrap",
-                  }}
-                >
-                  {col.label}
-                  {col.sort && sortKey === col.key && (
-                    <span style={{ marginLeft: 4 }}>{sortDir === 1 ? "↑" : "↓"}</span>
-                  )}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {sorted.map((company, i) => {
-              const isAtRisk = company.flags.includes("at-risk");
-              const isWatch  = company.flags.includes("watch");
-              return (
-                <tr
-                  key={company.id}
-                  style={{
-                    background: isAtRisk
-                      ? "rgba(239,83,80,0.06)"
-                      : isWatch
-                      ? "rgba(232,168,56,0.05)"
-                      : i % 2 === 0 ? "rgba(255,255,255,0.01)" : "transparent",
-                    borderBottom: "1px solid rgba(255,255,255,0.04)",
-                    transition: "background 0.15s",
-                  }}
-                >
-                  {COL_CONFIG.map(col => (
-                    <td
-                      key={col.key}
-                      style={{
-                        padding: "13px 14px",
-                        textAlign: col.align,
-                        color: "rgba(255,255,255,0.65)",
-                        borderLeft: col.key === "name"
-                          ? isAtRisk ? "2px solid #EF5350"
-                          : isWatch  ? "2px solid #E8A838"
-                          : undefined
-                          : undefined,
-                      }}
-                    >
-                      {col.render(company)}
-                    </td>
-                  ))}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+    <div style={{ overflowX: "auto" }}>
+      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+        <thead>
+          <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
+            {COL_CONFIG.map(col => (
+              <th
+                key={col.key}
+                onClick={() => col.sort && handleSort(col.key)}
+                style={{
+                  padding: "10px 14px", textAlign: col.align,
+                  fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase",
+                  color: sortKey === col.key ? "#6DB8E8" : "rgba(255,255,255,0.35)",
+                  fontFamily: "'DM Mono', monospace", fontWeight: 500,
+                  cursor: col.sort ? "pointer" : "default",
+                  userSelect: "none", whiteSpace: "nowrap",
+                }}
+              >
+                {col.label}
+                {col.sort && sortKey === col.key && (
+                  <span style={{ marginLeft: 4 }}>{sortDir === 1 ? "↑" : "↓"}</span>
+                )}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {sorted.map((company, i) => {
+            const isAtRisk = company.flags.includes("at-risk");
+            const isWatch  = company.flags.includes("watch");
+            return (
+              <tr
+                key={company.id}
+                style={{
+                  background: isAtRisk
+                    ? "rgba(239,83,80,0.06)"
+                    : isWatch
+                    ? "rgba(232,168,56,0.05)"
+                    : i % 2 === 0 ? "rgba(255,255,255,0.01)" : "transparent",
+                  borderBottom: "1px solid rgba(255,255,255,0.04)",
+                  transition: "background 0.15s",
+                }}
+              >
+                {COL_CONFIG.map(col => (
+                  <td
+                    key={col.key}
+                    style={{
+                      padding: "13px 14px",
+                      textAlign: col.align,
+                      color: "rgba(255,255,255,0.65)",
+                      borderLeft: col.key === "name"
+                        ? isAtRisk ? "2px solid #EF5350"
+                        : isWatch  ? "2px solid #E8A838"
+                        : undefined
+                        : undefined,
+                    }}
+                  >
+                    {col.render(company)}
+                  </td>
+                ))}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 }
